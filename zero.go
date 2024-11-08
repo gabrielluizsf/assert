@@ -10,11 +10,11 @@ import (
 //
 //	var myVar string
 //	assert.Zero(t, myVar, "myVar should be empty string")
-func Zero(t T, value any, fatalMessage string) {
+func Zero(t T, value any, args ...any) {
 	tester := initTest(t)
 	zeroValue := reflect.Zero(reflect.TypeOf(value))
 	configureTest(tester, value, zeroValue)
-	if !reflect.DeepEqual(value, zeroValue.Interface()) {
-		tester.Fatal(fatalMessage)
+	if !equal(value, zeroValue.Interface()) {
+		tester.Fatal(args...)
 	}
 }
