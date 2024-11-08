@@ -6,10 +6,8 @@ package assert
 //	err := someFunction()
 //	fatalMessage := fmt.Sprintf("Expected no error, but got: %v", err)
 //	assert.NoError(t, err, fatalMessage)
-func NoError(t T, err error, fatalMessage string) {
+func NoError(t T, err error, args ...any) {
 	tester := initTest(t)
 	configureTest(tester, err, "no error")
-	if err != nil {
-		tester.Fatal(fatalMessage)
-	}
+	Nil(t, err, args...)
 }
