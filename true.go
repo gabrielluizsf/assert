@@ -5,10 +5,10 @@ package assert
 //
 //	result := someFunction()
 //	assert.True(t, result, "Expected result to be true")
-func True(t T, ok bool, fatalMessage string) {
+func True(t T, ok bool, args ...any) {
 	tester := initTest(t)
 	configureTest(tester, ok, true)
 	if !ok {
-		tester.Fatal(fatalMessage)
+		tester.Fatal(args...)
 	}
 }
