@@ -5,10 +5,8 @@ package assert
 //
 //	err := someFunction()
 //	assert.Error(t, err, "Expected an error, but got nil")
-func Error(t T, err error, fatalMessage string) {
+func Error(t T, err error, args ...any) {
 	tester := initTest(t)
 	configureTest(tester, err, "error")
-	if err == nil {
-		tester.Fatal(fatalMessage)
-	}
+	NotNil(t, err, args...)
 }
