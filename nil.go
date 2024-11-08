@@ -5,10 +5,10 @@ package assert
 //
 //	myVar := new(string)
 //	assert.Nil(t, myVar, "myVar should be nil")
-func Nil(t T, v any, fatalMessage string) {
+func Nil(t T, v any, args ...any) {
 	tester := initTest(t)
 	configureTest(tester, v, "nil")
 	if v != nil {
-		tester.Fatal(fatalMessage)
+		tester.Fatal(args...)
 	}
 }
