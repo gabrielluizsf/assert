@@ -7,7 +7,7 @@ package assert
 //	assert.False(t, result, "Expected result to be false")
 func False(t T, ok bool, args ...any) {
 	tester := initTest(t)
-	configureTest(tester, ok, true)
+	configureTest(tester, ok, false)
 	if ok {
 		tester.Fatal(args...)
 	}
