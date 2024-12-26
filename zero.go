@@ -12,9 +12,15 @@ import (
 //	assert.Zero(t, myVar, "myVar should be empty string")
 func Zero(t T, value any, args ...any) {
 	tester := initTest(t)
-	zeroValue := reflect.Zero(reflect.TypeOf(value))
+	zeroValue, ok := isZeroValue(value)
 	configureTest(tester, value, zeroValue)
-	if !equal(value, zeroValue.Interface()) {
+	if !ok {
 		tester.Fatal(args...)
 	}
+}
+
+func isZeroValue(value any) (v reflect.Value, ok bool) {
+	v = reflect.Zero(reflect.TypeOf(value))
+	ok = equal(value, v.Interface())
+	return
 }
