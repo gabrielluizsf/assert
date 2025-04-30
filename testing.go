@@ -54,6 +54,7 @@ type test struct {
 	t                T
 	Caller           string
 	result, expected string
+	originalResult, originalExpected any
 	exit             func(code int)
 }
 
@@ -122,17 +123,26 @@ func (t *test) failedMessage(args ...any) string {
 		Message  any    `json:"message,omitempty"`
 	}
 	message.Failed = t.Caller
-	typeOf := func(data any) string { return reflect.TypeOf(data).String() }
+	typeOf := func(data any) string { 
+		typeOfData := reflect.TypeOf(data)
+		if typeOfData == nil {
+			return ""
+		}
+		if typeOfData.Kind() == reflect.Ptr {
+			typeOfData = typeOfData.Elem()
+		}
+		return typeOfData.Name()
+	}
 	if len(t.result) > 0 {
 		message.Result = value{
 			Value: t.result,
-			Type:  typeOf(t.result),
+			Type:  typeOf(t.originalResult),
 		}
 	}
 	if len(t.expected) > 0 {
 		message.Expected = value{
 			Value: t.expected,
-			Type:  typeOf(t.expected),
+			Type:  typeOf(t.originalExpected),
 		}
 	}
 	if len(args) > 0 {
@@ -157,6 +167,8 @@ func initTest(t T) T {
 
 func configureTest(tester T, result, expected any) {
 	if t, ok := tester.(*test); ok {
+		t.originalResult = result
+		t.originalExpected = expected
 		t.result = fmt.Sprint(result)
 		t.expected = fmt.Sprint(expected)
 		t.setCaller(call.Caller())
