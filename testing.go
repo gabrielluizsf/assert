@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"reflect"
 
 	"github.com/i9si-sistemas/assert/call"
 )
@@ -50,12 +49,12 @@ type T interface {
 }
 
 type test struct {
-	ctx              context.Context
-	t                T
-	Caller           string
-	result, expected string
+	ctx                              context.Context
+	t                                T
+	Caller                           string
+	result, expected                 string
 	originalResult, originalExpected any
-	exit             func(code int)
+	exit                             func(code int)
 }
 
 func newTest(ctx context.Context, t T) *test {
@@ -113,26 +112,16 @@ var jsonMarshalIndent = json.MarshalIndent
 
 func (t *test) failedMessage(args ...any) string {
 	type value struct {
-		Value any `json:"value"`
+		Value any    `json:"value"`
 		Type  string `json:"type"`
 	}
 	var message struct {
 		Failed   string `json:"failed,omitempty"`
-		Result   value `json:"result,omitempty"`
-		Expected value `json:"expected,omitempty"`
+		Result   value  `json:"result,omitempty"`
+		Expected value  `json:"expected,omitempty"`
 		Message  any    `json:"message,omitempty"`
 	}
 	message.Failed = t.Caller
-	typeOf := func(data any) string { 
-		typeOfData := reflect.TypeOf(data)
-		if typeOfData == nil {
-			return ""
-		}
-		if typeOfData.Kind() == reflect.Ptr {
-			typeOfData = typeOfData.Elem()
-		}
-		return typeOfData.Name()
-	}
 	if len(t.result) > 0 {
 		message.Result = value{
 			Value: t.result,
