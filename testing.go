@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 
 	"github.com/i9si-sistemas/assert/call"
 )
@@ -110,18 +111,29 @@ func (t *test) TempDir() string {
 var jsonMarshalIndent = json.MarshalIndent
 
 func (t *test) failedMessage(args ...any) string {
+	type value struct {
+		Value any `json:"value"`
+		Type  string `json:"type"`
+	}
 	var message struct {
 		Failed   string `json:"failed,omitempty"`
-		Result   any    `json:"result,omitempty"`
-		Expected any    `json:"expected,omitempty"`
+		Result   value `json:"result,omitempty"`
+		Expected value `json:"expected,omitempty"`
 		Message  any    `json:"message,omitempty"`
 	}
 	message.Failed = t.Caller
+	typeOf := func(data any) string { return reflect.TypeOf(data).String() }
 	if len(t.result) > 0 {
-		message.Result = t.result
+		message.Result = value{
+			Value: t.result,
+			Type:  typeOf(t.result),
+		}
 	}
 	if len(t.expected) > 0 {
-		message.Expected = t.expected
+		message.Expected = value{
+			Value: t.expected,
+			Type:  typeOf(t.expected),
+		}
 	}
 	if len(args) > 0 {
 		message.Message = args[0]

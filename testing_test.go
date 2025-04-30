@@ -71,15 +71,15 @@ func TestTesting(t *testing.T) {
 		t.Fail()
 	}
 	msg := test.failedMessage()
-	Equal(t, msg, "\n{}\n\n", "should be equal")
+	Equal(t, msg, "\n{\n  \"result\": {\n    \"value\": null,\n    \"type\": \"\"\n  },\n  \"expected\": {\n    \"value\": null,\n    \"type\": \"\"\n  }\n}\n\n", "should be equal")
 	failedMessage := "Hello World"
 	msg = test.failedMessage(failedMessage)
-	expected := fmt.Sprintf("\n{\n  \"message\": \"%s\"\n}\n\n", failedMessage)
+	expected := fmt.Sprintf("\n{\n  \"result\": {\n    \"value\": null,\n    \"type\": \"\"\n  },\n  \"expected\": {\n    \"value\": null,\n    \"type\": \"\"\n  },\n  \"message\": \"%s\"\n}\n\n", failedMessage)
 	Equal(t, msg, expected, "should be equal")
 	test.result = msg
 	test.expected = expected
 	msg = test.failedMessage(failedMessage)
-	expected = fmt.Sprintf("\n{\n  \"result\": \"\\n{\\n  \\\"message\\\": \\\"%s\\\"\\n}\\n\\n\",\n  \"expected\": \"\\n{\\n  \\\"message\\\": \\\"%s\\\"\\n}\\n\\n\",\n  \"message\": \"%s\"\n}\n\n", failedMessage, failedMessage, failedMessage)
+	expected = "\n{\n  \"result\": {\n    \"value\": \"\\n{\\n  \\\"result\\\": {\\n    \\\"value\\\": null,\\n    \\\"type\\\": \\\"\\\"\\n  },\\n  \\\"expected\\\": {\\n    \\\"value\\\": null,\\n    \\\"type\\\": \\\"\\\"\\n  },\\n  \\\"message\\\": \\\"Hello World\\\"\\n}\\n\\n\",\n    \"type\": \"string\"\n  },\n  \"expected\": {\n    \"value\": \"\\n{\\n  \\\"result\\\": {\\n    \\\"value\\\": null,\\n    \\\"type\\\": \\\"\\\"\\n  },\\n  \\\"expected\\\": {\\n    \\\"value\\\": null,\\n    \\\"type\\\": \\\"\\\"\\n  },\\n  \\\"message\\\": \\\"Hello World\\\"\\n}\\n\\n\",\n    \"type\": \"string\"\n  },\n  \"message\": \"Hello World\"\n}\n\n"
 	Equal(t, msg, expected, "should be equal")
 	jsonMarshalIndent = func(v any, prefix, indent string) ([]byte, error) {
 		return nil, errors.New("marshal error")
