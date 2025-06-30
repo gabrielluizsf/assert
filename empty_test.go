@@ -3,11 +3,13 @@ package assert
 import (
 	"slices"
 	"testing"
+
+	"github.com/i9si-sistemas/stringx"
 )
 
 func TestEmpty(t *testing.T) {
 	fatalMessage := "should be zero value"
-	Empty(t, "", fatalMessage)
+	Empty(t, stringx.Empty, fatalMessage)
 	spy := newSpy(t)
 	Empty(spy, "10", fatalMessage)
 	if !spy.calls["Fatal"] {

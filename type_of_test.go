@@ -1,6 +1,10 @@
 package assert
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/i9si-sistemas/stringx"
+)
 
 func TestTypeOf(t *testing.T) {
 	type (
@@ -29,10 +33,10 @@ func TestTypeOf(t *testing.T) {
 	Equal(t, typeStr, "int")
 
 	typeStr = typeOf(nil)
-	Equal(t, typeStr, "")
+	Equal(t, typeStr, stringx.Empty)
 
 	typeStr = typeOf(func() {})
-	Equal(t, typeStr, "")
+	Equal(t, typeStr, stringx.Empty)
 
 	type Handler func(v any) error
 
@@ -40,5 +44,5 @@ func TestTypeOf(t *testing.T) {
 	Equal(t, typeStr, "Handler")
 
 	typeStr = typeOf(func(v any) error { return nil })
-	Equal(t, typeStr, "")
+	Equal(t, typeStr, stringx.Empty)
 }

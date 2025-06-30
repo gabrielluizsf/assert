@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/i9si-sistemas/assert/call"
+	"github.com/i9si-sistemas/stringx"
 )
 
 // T is an interface that provides methods for managing test execution,
@@ -137,12 +138,14 @@ func (t *test) failedMessage(args ...any) string {
 	if len(args) > 0 {
 		message.Message = args[0]
 	}
-
-	jsonData, err := jsonMarshalIndent(message, "", "  ")
+	empty := stringx.Empty.String()
+	space := stringx.Space
+	jsonData, err := jsonMarshalIndent(message, empty, space.Concat(space).String())
 	if err != nil {
-		return ""
+		return empty
 	}
-	return "\n" + string(jsonData) + "\n\n"
+	convert := func (s string) stringx.String {return stringx.String(s)}
+	return convert("\n").Concat(convert(string(jsonData)), convert("\n\n")).String()
 }
 
 func initTest(t T) T {
