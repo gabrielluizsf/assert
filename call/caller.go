@@ -3,9 +3,10 @@ package call
 import (
 	"fmt"
 	"runtime"
-	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/i9si-sistemas/stringx"
 )
 
 var (
@@ -46,13 +47,13 @@ func Caller() string {
 		if name == "testing.tRunner" {
 			break
 		}
-
-		parts := strings.Split(file, "/")
+		split := func(s, sep string) []string { return stringx.String(s).Split(sep) }
+		parts := split(file, "/")
 		if len(parts) > 1 {
 			callers = append(callers, fmt.Sprintf("%s:%d", file, line))
 		}
 
-		segments := strings.Split(name, ".")
+		segments := split(name, ".")
 		name = segments[len(segments)-1]
 		if hasPrefix(name, "Test") || hasPrefix(name, "Benchmark") || hasPrefix(name, "Example") {
 			break
@@ -61,11 +62,11 @@ func Caller() string {
 	if len(callers) > 0 {
 		return callers[len(callers)-1]
 	}
-	return ""
+	return stringx.Empty.String()
 }
 
 func hasPrefix(name, prefix string) bool {
-	if !strings.HasPrefix(name, prefix) {
+	if !stringx.String(name).HasPrefix(prefix) {
 		return false
 	}
 	if len(name) == len(prefix) {
